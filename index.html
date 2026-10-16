@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Elektrofahrzeug vs. Verbrenner</title>
+  <style>
+    :root {
+      --ev-color: #0284c7;
+      --ev-light: #e0f2fe;
+      --ev-border: #7dd3fc;
+      --ice-color: #ea580c;
+      --ice-light: #ffedd5;
+      --ice-border: #fdba74;
+      --green-bg: #dcfce7;
+      --green-text: #14532d;
+      --green-border: #86efac;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; padding: 20px; background: var(--bg); color: var(--text); line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 14px; }
+    h1 { margin: 0 0 6px 0; font-size: 1.5rem; color: #0f172a; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; margin: 0; }
+    .grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; align-items: start; }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 18px; }
+    .card h2 { margin: 0 0 12px 0; font-size: 1.08rem; border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .badge-ev { background: var(--ev-light); color: var(--ev-color); border: 1px solid var(--ev-border); padding: 3px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; }
+    .badge-ice { background: var(--ice-light); color: var(--ice-color); border: 1px solid var(--ice-border); padding: 3px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; }
+    .badge-info { background: #f1f5f9; color: #334155; padding: 3px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; }
+
+    .slider-group { margin-bottom: 12px; }
+    .slider-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; font-weight: 500; }
+    .slider-val { font-weight: 700; color: #0f172a; }
+    .slider-hint { font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
+    input[type="range"] { width: 100%; cursor: pointer; margin: 2px 0; }
+    .ev-slider { accent-color: var(--ev-color) !important; }
+    .ice-slider { accent-color: var(--ice-color) !important; }
+
+    .toggle-row { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--muted); margin-bottom: 10px; background: #f8fafc; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); }
+    .btn-reset { background: #f1f5f9; border: 1px solid #cbd5e1; color: #1e293b; padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+    .btn-reset:hover { background: #e2e8f0; }
+
+    .kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .kpi-box { padding: 12px; border-radius: 10px; text-align: center; }
+    .kpi-ev { background: var(--ev-light); border: 1px solid var(--ev-border); }
+    .kpi-ice { background: var(--ice-light); border: 1px solid var(--ice-border); }
+    .kpi-title { font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+    .kpi-num { font-size: 1.35rem; font-weight: 800; margin: 3px 0 2px 0; }
+    .kpi-sub { font-size: 0.75rem; color: var(--muted); }
+
+    .saving-banner { background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green-text); padding: 10px 12px; border-radius: 10px; text-align: center; font-weight: 600; margin-bottom: 12px; font-size: 0.88rem; }
+
+    .bar-section { margin-bottom: 10px; }
+    .bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 2px; font-weight: 500; }
+    .bar-track { background: #f1f5f9; height: 9px; border-radius: 5px; overflow: hidden; display: flex; margin-bottom: 2px; }
+    .bar-fill-ev { background: var(--ev-color); height: 100%; transition: width 0.2s; }
+    .bar-fill-ice { background: var(--ice-color); height: 100%; transition: width 0.2s; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-top: 8px; }
+    th, td { padding: 7px 5px; border-bottom: 1px solid var(--border); text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: #f8fafc; font-weight: 700; color: #334155; }
+    tr.subtotal-row { font-weight: 700; background: #f8fafc; }
+    tr.total-row { font-weight: 800; background: #e0f2fe; font-size: 0.87rem; }
+    .pos-val { color: #15803d; font-weight: 700; }
+    .neg-val { color: #b91c1c; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+    <div>
+      <h1>Kostenvergleich: Elektrofahrzeug vs. Verbrenner</h1>
+      <p class="subtitle">Interaktiver TCO- & Betriebskostenrechner für PKW</p>
+    </div>
+    <button class="btn-reset" onclick="resetDefaults()">Standardwerte laden</button>
+  </header>
+
+  <div class="grid">
+    <!-- LINKE SPALTE: EINGABEN -->
+    <div>
+      <div class="card">
+        <h2>1. Fahrprofil & Haltedauer <span class="badge-info">Allgemein</span></h2>
+        <div class="toggle-row">
+          <input type="checkbox" id="syncKm" checked onchange="toggleSync()">
+          <label for="syncKm">Gleiche Jahresfahrleistung für beide Autos</label>
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Fahrstrecke Elektrofahrzeug</span>
+            <span class="slider-val" id="val_km_ev">10.000 km/Jahr</span>
+          </div>
+          <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmEvChange()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Fahrstrecke Verbrenner</span>
+            <span class="slider-val" id="val_km_ice">10.000 km/Jahr</span>
+          </div>
+          <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmIceChange()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Geplante Haltedauer</span>
+            <span class="slider-val" id="val_years">5 Jahre</span>
+          </div>
+          <input type="range" id="years" min="1" max="10" step="1" value="5" oninput="calc()">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2. Elektrofahrzeug (EV) <span class="badge-ev">Batterieantrieb</span></h2>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Stromverbrauch (inkl. Ladeverluste)</span>
+            <span class="slider-val" id="val_cons_ev">17,5 kWh / 100 km</span>
+          </div>
+          <input type="range" id="cons_ev" class="ev-slider" min="12.0" max="24.0" step="0.5" value="17.5" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Strompreis</span>
+            <span class="slider-val" id="val_price_ev">0,32 € / kWh</span>
+          </div>
+          <input type="range" id="price_ev" class="ev-slider" min="0.15" max="0.75" step="0.01" value="0.32" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
+            <span class="slider-val" id="val_maint_ev">220 € / Jahr</span>
+          </div>
+          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="220" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Versicherung (Haftpflicht + Vollkasko)</span>
+            <span class="slider-val" id="val_ins_ev">520 € / Jahr</span>
+          </div>
+          <input type="range" id="ins_ev" class="ev-slider" min="250" max="1000" step="10" value="520" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>THG-Bonus (Jährliche Einnahme)</span>
+            <span class="slider-val" id="val_thg_ev">200 € / Jahr</span>
+          </div>
+          <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="200" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Einmalige Kosten Wallbox (inkl. Montage)</span>
+            <span class="slider-val" id="val_wallbox">1.000 €</span>
+          </div>
+          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="1000" oninput="calc()">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>3. Verbrenner (Benzin / Diesel) <span class="badge-ice">Verbrennungsmotor</span></h2>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Spritverbrauch</span>
+            <span class="slider-val" id="val_cons_ice">5,6 l / 100 km</span>
+          </div>
+          <input type="range" id="cons_ice" class="ice-slider" min="4.2" max="8.0" step="0.1" value="5.6" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Spritpreis</span>
+            <span class="slider-val" id="val_price_ice">1,75 € / Liter</span>
+          </div>
+          <input type="range" id="price_ice" class="ice-slider" min="1.40" max="2.30" step="0.01" value="1.75" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
+            <span class="slider-val" id="val_maint_ice">380 € / Jahr</span>
+          </div>
+          <input type="range" id="maint_ice" class="ice-slider" min="200" max="750" step="10" value="380" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Versicherung (Haftpflicht + Vollkasko)</span>
+            <span class="slider-val" id="val_ins_ice">490 € / Jahr</span>
+          </div>
+          <input type="range" id="ins_ice" class="ice-slider" min="250" max="1000" step="10" value="490" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Kfz-Steuer Verbrenner (EV oft steuerbefreit)</span>
+            <span class="slider-val" id="val_tax_ice">62 € / Jahr</span>
+          </div>
+          <input type="range" id="tax_ice" class="ice-slider" min="0" max="150" step="2" value="62" oninput="calc()">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>4. Anschaffungspreise & Restwert <span class="badge-info">Kapital</span></h2>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Kaufpreis Elektrofahrzeug</span>
+            <span class="slider-val" id="val_buy_ev">13.200 €</span>
+          </div>
+          <input type="range" id="buy_ev" class="ev-slider" min="8000" max="40000" step="200" value="13200" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Kaufpreis Verbrenner</span>
+            <span class="slider-val" id="val_buy_ice">10.900 €</span>
+          </div>
+          <input type="range" id="buy_ice" class="ice-slider" min="7000" max="35000" step="200" value="10900" oninput="calc()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Restwert am Ende (% vom Kaufpreis)</span>
+            <span class="slider-val" id="val_res">45 %</span>
+          </div>
+          <input type="range" id="res_pct" min="20" max="75" step="5" value="45" oninput="calc()">
+        </div>
+      </div>
+    </div>
+
+    <!-- RECHTE SPALTE: AUSWERTUNG -->
+    <div>
+      <div class="card">
+        <h2>Live-Auswertung: Kosten pro Jahr</h2>
+
+        <div class="kpi-row">
+          <div class="kpi-box kpi-ev">
+            <div class="kpi-title">Betrieb Elektro</div>
+            <div class="kpi-num" id="out_op_ev">1.100 €</div>
+            <div class="kpi-sub" id="out_km_op_ev">11,0 ct / km</div>
+          </div>
+          <div class="kpi-box kpi-ice">
+            <div class="kpi-title">Betrieb Verbrenner</div>
+            <div class="kpi-num" id="out_op_ice">1.912 €</div>
+            <div class="kpi-sub" id="out_km_op_ice">19,1 ct / km</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-box kpi-ev">
+            <div class="kpi-title">Gesamtkosten (TCO inkl. Wallbox)</div>
+            <div class="kpi-num" id="out_tco_ev">2.752 €</div>
+            <div class="kpi-sub" id="out_km_tco_ev">27,5 ct / km</div>
+          </div>
+          <div class="kpi-box kpi-ice">
+            <div class="kpi-title">Gesamtkosten (TCO Verbrenner)</div>
+            <div class="kpi-num" id="out_tco_ice">3.111 €</div>
+            <div class="kpi-sub" id="out_km_tco_ice">31,1 ct / km</div>
+          </div>
+        </div>
+
+        <div class="saving-banner" id="out_banner_op"></div>
+        <div class="saving-banner" id="out_banner_tco" style="margin-top:-6px;"></div>
+
+        <div class="bar-section">
+          <div class="bar-label">
+            <span>Energiekosten / Jahr</span>
+            <span id="bar_lbl_energy">560 € vs. 980 €</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill-ev" id="bar_ev_energy"></div></div>
+          <div class="bar-track"><div class="bar-fill-ice" id="bar_ice_energy"></div></div>
+        </div>
+
+        <div class="bar-section">
+          <div class="bar-label">
+            <span>Wartung & Instandhaltung / Jahr</span>
+            <span id="bar_lbl_maint">220 € vs. 380 €</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill-ev" id="bar_ev_maint"></div></div>
+          <div class="bar-track"><div class="bar-fill-ice" id="bar_ice_maint"></div></div>
+        </div>
+
+        <div class="bar-section">
+          <div class="bar-label">
+            <span>Gesamtkosten (TCO) / Jahr</span>
+            <span id="bar_lbl_tco">2.752 € vs. 3.111 €</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill-ev" id="bar_ev_tco"></div></div>
+          <div class="bar-track"><div class="bar-fill-ice" id="bar_ice_tco"></div></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Kostenblock (pro Jahr)</th>
+              <th>Elektro</th>
+              <th>Verbrenner</th>
+              <th>Differenz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Energie (Strom / Sprit)</td>
+              <td id="tb_en_ev">560 €</td>
+              <td id="tb_en_ice">980 €</td>
+              <td id="tb_en_diff" class="pos-val">-420 €</td>
+            </tr>
+            <tr>
+              <td>2. Wartung & Instandhaltung</td>
+              <td id="tb_ma_ev">220 €</td>
+              <td id="tb_ma_ice">380 €</td>
+              <td id="tb_ma_diff" class="pos-val">-160 €</td>
+            </tr>
+            <tr>
+              <td>3. Versicherung</td>
+              <td id="tb_ins_ev">520 €</td>
+              <td id="tb_ins_ice">490 €</td>
+              <td id="tb_ins_diff" class="neg-val">+30 €</td>
+            </tr>
+            <tr>
+              <td>4. Kfz-Steuer</td>
+              <td>0 €</td>
+              <td id="tb_tax_ice">62 €</td>
+              <td id="tb_tax_diff" class="pos-val">-62 €</td>
+            </tr>
+            <tr>
+              <td>5. THG-Bonus (Einnahme EV)</td>
+              <td id="tb_thg_ev">-200 €</td>
+              <td>0 €</td>
+              <td id="tb_thg_diff" class="pos-val">-200 €</td>
+            </tr>
+            <tr class="subtotal-row">
+              <td>SUMME Betrieb / Jahr</td>
+              <td id="tb_op_ev">1.100 €</td>
+              <td id="tb_op_ice">1.912 €</td>
+              <td id="tb_op_diff" class="pos-val">-812 €</td>
+            </tr>
+            <tr>
+              <td>6. Wertverlust / Jahr</td>
+              <td id="tb_dep_ev">1.452 €</td>
+              <td id="tb_dep_ice">1.199 €</td>
+              <td id="tb_dep_diff" class="neg-val">+253 €</td>
+            </tr>
+            <tr>
+              <td>7. Wallbox-Umlage / Jahr</td>
+              <td id="tb_wb_ev">200 €</td>
+              <td>0 €</td>
+              <td id="tb_wb_diff" class="neg-val">+200 €</td>
+            </tr>
+            <tr class="total-row">
+              <td>GESAMTKOSTEN (TCO) / Jahr</td>
+              <td id="tb_tco_ev">2.752 €</td>
+              <td id="tb_tco_ice">3.111 €</td>
+              <td id="tb_tco_diff" class="pos-val">-359 €</td>
+            </tr>
+            <tr class="subtotal-row">
+              <td id="tb_total_period_lbl">Gesamtkosten über 5 Jahre</td>
+              <td id="tb_tot5_ev">13.760 €</td>
+              <td id="tb_tot5_ice">15.555 €</td>
+              <td id="tb_tot5_diff" class="pos-val">-1.795 €</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:12px; padding:10px; background:#f8fafc; border:1px solid var(--border); border-radius:8px; font-size:0.82rem;">
+          <strong>Amortisation der Anschaffung & Wallbox:</strong>
+          <p style="margin:4px 0 0 0; color:var(--muted);" id="amort_text"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fmt(n) { return Math.round(n).toLocaleString('de-DE') + ' €'; }
+  function fmtDiff(n) {
+    const r = Math.round(n);
+    if (r > 0) return '+' + r.toLocaleString('de-DE') + ' €';
+    return r.toLocaleString('de-DE') + ' €';
+  }
+  function setDiffClass(el, diffVal) { el.className = diffVal <= 0 ? 'pos-val' : 'neg-val'; }
+
+  function toggleSync() {
+    if (document.getElementById('syncKm').checked) {
+      document.getElementById('km_ice').value = document.getElementById('km_ev').value;
+      calc();
+    }
+  }
+  function onKmEvChange() {
+    if (document.getElementById('syncKm').checked) {
+      document.getElementById('km_ice').value = document.getElementById('km_ev').value;
+    }
+    calc();
+  }
+  function onKmIceChange() {
+    if (document.getElementById('syncKm').checked) {
+      document.getElementById('km_ev').value = document.getElementById('km_ice').value;
+    }
+    calc();
+  }
+
+  function resetDefaults() {
+    document.getElementById('syncKm').checked = true;
+    document.getElementById('km_ev').value = 10000;
+    document.getElementById('km_ice').value = 10000;
+    document.getElementById('years').value = 5;
+    document.getElementById('cons_ev').value = 17.5;
+    document.getElementById('price_ev').value = 0.32;
+    document.getElementById('maint_ev').value = 220;
+    document.getElementById('ins_ev').value = 520;
+    document.getElementById('thg_ev').value = 200;
+    document.getElementById('wallbox').value = 1000;
+    document.getElementById('cons_ice').value = 5.6;
+    document.getElementById('price_ice').value = 1.75;
+    document.getElementById('maint_ice').value = 380;
+    document.getElementById('ins_ice').value = 490;
+    document.getElementById('tax_ice').value = 62;
+    document.getElementById('buy_ev').value = 13200;
+    document.getElementById('buy_ice').value = 10900;
+    document.getElementById('res_pct').value = 45;
+    calc();
+  }
+
+  function calc() {
+    const kmEv = parseFloat(document.getElementById('km_ev').value);
+    const kmIce = parseFloat(document.getElementById('km_ice').value);
+    const years = parseFloat(document.getElementById('years').value);
+
+    const consEv = parseFloat(document.getElementById('cons_ev').value);
+    const priceEv = parseFloat(document.getElementById('price_ev').value);
+    const maintBaseEv = parseFloat(document.getElementById('maint_ev').value);
+    const insEv = parseFloat(document.getElementById('ins_ev').value);
+    const thgEv = parseFloat(document.getElementById('thg_ev').value);
+    const wallbox = parseFloat(document.getElementById('wallbox').value);
+
+    const consIce = parseFloat(document.getElementById('cons_ice').value);
+    const priceIce = parseFloat(document.getElementById('price_ice').value);
+    const maintBaseIce = parseFloat(document.getElementById('maint_ice').value);
+    const insIce = parseFloat(document.getElementById('ins_ice').value);
+    const taxIce = parseFloat(document.getElementById('tax_ice').value);
+
+    const buyEv = parseFloat(document.getElementById('buy_ev').value);
+    const buyIce = parseFloat(document.getElementById('buy_ice').value);
+    const resPct = parseFloat(document.getElementById('res_pct').value);
+
+    document.getElementById('val_km_ev').textContent = kmEv.toLocaleString('de-DE') + ' km/Jahr';
+    document.getElementById('val_km_ice').textContent = kmIce.toLocaleString('de-DE') + ' km/Jahr';
+    document.getElementById('val_years').textContent = years + (years === 1 ? ' Jahr' : ' Jahre');
+
+    document.getElementById('val_cons_ev').textContent = consEv.toFixed(1).replace('.', ',') + ' kWh / 100 km';
+    document.getElementById('val_price_ev').textContent = priceEv.toFixed(2).replace('.', ',') + ' € / kWh';
+    document.getElementById('val_maint_ev').textContent = maintBaseEv + ' € / Jahr';
+    document.getElementById('val_ins_ev').textContent = insEv + ' € / Jahr';
+    document.getElementById('val_thg_ev').textContent = thgEv + ' € / Jahr';
+    document.getElementById('val_wallbox').textContent = wallbox.toLocaleString('de-DE') + ' €';
+
+    document.getElementById('val_cons_ice').textContent = consIce.toFixed(1).replace('.', ',') + ' l / 100 km';
+    document.getElementById('val_price_ice').textContent = priceIce.toFixed(2).replace('.', ',') + ' € / Liter';
+    document.getElementById('val_maint_ice').textContent = maintBaseIce + ' € / Jahr';
+    document.getElementById('val_ins_ice').textContent = insIce + ' € / Jahr';
+    document.getElementById('val_tax_ice').textContent = taxIce + ' € / Jahr';
+
+    document.getElementById('val_buy_ev').textContent = buyEv.toLocaleString('de-DE') + ' €';
+    document.getElementById('val_buy_ice').textContent = buyIce.toLocaleString('de-DE') + ' €';
+    document.getElementById('val_res').textContent = resPct + ' % (Wertverlust: ' + (100 - resPct) + ' %)';
+
+    const energyEv = (kmEv / 100) * consEv * priceEv;
+    const energyIce = (kmIce / 100) * consIce * priceIce;
+
+    const maintEv = maintBaseEv * (0.5 + 0.5 * (kmEv / 10000));
+    const maintIce = maintBaseIce * (0.5 + 0.5 * (kmIce / 10000));
+
+    const fixEv = insEv - thgEv;
+    const fixIce = insIce + taxIce;
+
+    const opEv = energyEv + maintEv + fixEv;
+    const opIce = energyIce + maintIce + fixIce;
+    const opDiff = opEv - opIce;
+
+    const depRatio = (100 - resPct) / 100;
+    const depEv = (buyEv * depRatio) / years;
+    const depIce = (buyIce * depRatio) / years;
+    const wbYear = wallbox / years;
+
+    const tcoEv = opEv + depEv + wbYear;
+    const tcoIce = opIce + depIce;
+    const tcoDiff = tcoEv - tcoIce;
+
+    document.getElementById('out_op_ev').textContent = fmt(opEv);
+    document.getElementById('out_op_ice').textContent = fmt(opIce);
+    document.getElementById('out_km_op_ev').textContent = ((opEv / kmEv) * 100).toFixed(1).replace('.', ',') + ' ct / km (Betrieb)';
+    document.getElementById('out_km_op_ice').textContent = ((opIce / kmIce) * 100).toFixed(1).replace('.', ',') + ' ct / km (Betrieb)';
+
+    document.getElementById('out_tco_ev').textContent = fmt(tcoEv);
+    document.getElementById('out_tco_ice').textContent = fmt(tcoIce);
+    document.getElementById('out_km_tco_ev').textContent = ((tcoEv / kmEv) * 100).toFixed(1).replace('.', ',') + ' ct / km (Vollkosten)';
+    document.getElementById('out_km_tco_ice').textContent = ((tcoIce / kmIce) * 100).toFixed(1).replace('.', ',') + ' ct / km (Vollkosten)';
+
+    const bOp = document.getElementById('out_banner_op');
+    if (opDiff <= 0) {
+      bOp.style.background = '#dcfce7'; bOp.style.color = '#14532d'; bOp.style.borderColor = '#86efac';
+      bOp.textContent = 'Vorteil Elektro im laufenden Betrieb: ' + fmt(Math.abs(opDiff)) + ' / Jahr (' + fmt(Math.abs(opDiff) * years) + ' in ' + years + ' J.)';
+    } else {
+      bOp.style.background = '#ffedd5'; bOp.style.color = '#9a3412'; bOp.style.borderColor = '#fdba74';
+      bOp.textContent = 'Vorteil Verbrenner im laufenden Betrieb: ' + fmt(Math.abs(opDiff)) + ' / Jahr';
+    }
+
+    const bTco = document.getElementById('out_banner_tco');
+    if (tcoDiff <= 0) {
+      bTco.style.background = '#e0f2fe'; bTco.style.color = '#075985'; bTco.style.borderColor = '#7dd3fc';
+      bTco.textContent = 'Vorteil Elektro bei Gesamtkosten (TCO): ' + fmt(Math.abs(tcoDiff)) + ' / Jahr (' + fmt(Math.abs(tcoDiff) * years) + ' gesamt)';
+    } else {
+      bTco.style.background = '#ffedd5'; bTco.style.color = '#9a3412'; bTco.style.borderColor = '#fdba74';
+      bTco.textContent = 'Vorteil Verbrenner bei Gesamtkosten (TCO): ' + fmt(Math.abs(tcoDiff)) + ' / Jahr';
+    }
+
+    const maxEn = Math.max(energyEv, energyIce, 1);
+    document.getElementById('bar_ev_energy').style.width = ((energyEv / maxEn) * 100) + '%';
+    document.getElementById('bar_ice_energy').style.width = ((energyIce / maxEn) * 100) + '%';
+    document.getElementById('bar_lbl_energy').textContent = fmt(energyEv) + ' vs. ' + fmt(energyIce);
+
+    const maxMa = Math.max(maintEv, maintIce, 1);
+    document.getElementById('bar_ev_maint').style.width = ((maintEv / maxMa) * 100) + '%';
+    document.getElementById('bar_ice_maint').style.width = ((maintIce / maxMa) * 100) + '%';
+    document.getElementById('bar_lbl_maint').textContent = fmt(maintEv) + ' vs. ' + fmt(maintIce);
+
+    const maxTco = Math.max(tcoEv, tcoIce, 1);
+    document.getElementById('bar_ev_tco').style.width = ((tcoEv / maxTco) * 100) + '%';
+    document.getElementById('bar_ice_tco').style.width = ((tcoIce / maxTco) * 100) + '%';
+    document.getElementById('bar_lbl_tco').textContent = fmt(tcoEv) + ' vs. ' + fmt(tcoIce);
+
+    document.getElementById('tb_en_ev').textContent = fmt(energyEv);
+    document.getElementById('tb_en_ice').textContent = fmt(energyIce);
+    const enDiffEl = document.getElementById('tb_en_diff'); enDiffEl.textContent = fmtDiff(energyEv - energyIce); setDiffClass(enDiffEl, energyEv - energyIce);
+
+    document.getElementById('tb_ma_ev').textContent = fmt(maintEv);
+    document.getElementById('tb_ma_ice').textContent = fmt(maintIce);
+    const maDiffEl = document.getElementById('tb_ma_diff'); maDiffEl.textContent = fmtDiff(maintEv - maintIce); setDiffClass(maDiffEl, maintEv - maintIce);
+
+    document.getElementById('tb_ins_ev').textContent = fmt(insEv);
+    document.getElementById('tb_ins_ice').textContent = fmt(insIce);
+    const insDiffEl = document.getElementById('tb_ins_diff'); insDiffEl.textContent = fmtDiff(insEv - insIce); setDiffClass(insDiffEl, insEv - insIce);
+
+    document.getElementById('tb_tax_ice').textContent = fmt(taxIce);
+    const taxDiffEl = document.getElementById('tb_tax_diff'); taxDiffEl.textContent = fmtDiff(-taxIce); setDiffClass(taxDiffEl, -taxIce);
+
+    document.getElementById('tb_thg_ev').textContent = '-' + fmt(thgEv);
+    const thgDiffEl = document.getElementById('tb_thg_diff'); thgDiffEl.textContent = fmtDiff(-thgEv); setDiffClass(thgDiffEl, -thgEv);
+
+    document.getElementById('tb_op_ev').textContent = fmt(opEv);
+    document.getElementById('tb_op_ice').textContent = fmt(opIce);
+    const opDiffEl = document.getElementById('tb_op_diff'); opDiffEl.textContent = fmtDiff(opDiff); setDiffClass(opDiffEl, opDiff);
+
+    document.getElementById('tb_dep_ev').textContent = fmt(depEv);
+    document.getElementById('tb_dep_ice').textContent = fmt(depIce);
+    const depDiffEl = document.getElementById('tb_dep_diff'); depDiffEl.textContent = fmtDiff(depEv - depIce); setDiffClass(depDiffEl, depEv - depIce);
+
+    document.getElementById('tb_wb_ev').textContent = fmt(wbYear);
+    const wbDiffEl = document.getElementById('tb_wb_diff'); wbDiffEl.textContent = fmtDiff(wbYear); setDiffClass(wbDiffEl, wbYear);
+
+    document.getElementById('tb_tco_ev').textContent = fmt(tcoEv);
+    document.getElementById('tb_tco_ice').textContent = fmt(tcoIce);
+    const tcoDiffEl = document.getElementById('tb_tco_diff'); tcoDiffEl.textContent = fmtDiff(tcoDiff); setDiffClass(tcoDiffEl, tcoDiff);
+
+    document.getElementById('tb_total_period_lbl').textContent = 'Gesamtkosten über ' + years + (years === 1 ? ' Jahr' : ' Jahre');
+    document.getElementById('tb_tot5_ev').textContent = fmt(tcoEv * years);
+    document.getElementById('tb_tot5_ice').textContent = fmt(tcoIce * years);
+    const tot5DiffEl = document.getElementById('tb_tot5_diff'); tot5DiffEl.textContent = fmtDiff(tcoDiff * years); setDiffClass(tot5DiffEl, tcoDiff * years);
+
+    const carGap = buyEv - buyIce;
+    const totalUpfrontGap = carGap + wallbox;
+    const annualOpSavings = opIce - opEv;
+    const amortEl = document.getElementById('amort_text');
+
+    if (totalUpfrontGap <= 0 && annualOpSavings > 0) {
+      amortEl.textContent = 'Sofortige Amortisation ab Kilometer 0: Das Elektrofahrzeug ist inklusive Wallbox bereits in der Anschaffung günstiger.';
+    } else if (annualOpSavings > 0) {
+      const beCarOnly = Math.max(0, carGap / annualOpSavings).toFixed(1).replace('.', ',');
+      const beWithWb = (totalUpfrontGap / annualOpSavings).toFixed(1).replace('.', ',');
+      amortEl.innerHTML =
+        '• <strong>Kaufpreis-Differenz (' + fmt(carGap) + '):</strong> Amortisiert nach <strong>' + beCarOnly + ' Jahren</strong>.<br>' +
+        '• <strong>Gesamt-Startinvestition inkl. Wallbox (' + fmt(totalUpfrontGap) + '):</strong> Amortisiert nach <strong>' + beWithWb + ' Jahren</strong>.';
+    } else {
+      amortEl.textContent = 'Bei den aktuell gewählten Parametern sind die laufenden Betriebskosten des Elektrofahrzeugs nicht niedriger als beim Verbrenner.';
+    }
+  }
+
+  calc();
+</script>
+</body>
+</html>
