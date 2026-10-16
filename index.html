@@ -98,21 +98,21 @@
             <span>Fahrstrecke Elektrofahrzeug</span>
             <span class="slider-val" id="val_km_ev">10.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmEvChange()">
+          <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="20000" oninput="onKmEvChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Fahrstrecke Verbrenner</span>
             <span class="slider-val" id="val_km_ice">10.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmIceChange()">
+          <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="20000" oninput="onKmIceChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Geplante Haltedauer</span>
             <span class="slider-val" id="val_years">5 Jahre</span>
           </div>
-          <input type="range" id="years" min="1" max="10" step="1" value="5" oninput="calc()">
+          <input type="range" id="years" min="1" max="10" step="1" value="10" oninput="calc()">
         </div>
       </div>
 
@@ -123,18 +123,18 @@
             <span>Stromverbrauch (inkl. Ladeverluste)</span>
             <span class="slider-val" id="val_cons_ev">17,5 kWh / 100 km</span>
           </div>
-          <input type="range" id="cons_ev" class="ev-slider" min="12.0" max="24.0" step="0.5" value="17.5" oninput="calc()">
+          <input type="range" id="cons_ev" class="ev-slider" min="12.0" max="24.0" step="0.5" value="16.5" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Strompreis</span>
             <span class="slider-val" id="val_price_ev">0,32 € / kWh</span>
           </div>
-          <input type="range" id="price_ev" class="ev-slider" min="0.15" max="0.75" step="0.01" value="0.32" oninput="calc()">
+          <input type="range" id="price_ev" class="ev-slider" min="0.15" max="0.75" step="0.01" value="0.33" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
-            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
+            <span>Wartung & Instandhaltung </span>
             <span class="slider-val" id="val_maint_ev">220 € / Jahr</span>
           </div>
           <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="220" oninput="calc()">
@@ -151,19 +151,19 @@
             <span>THG-Bonus (Jährliche Einnahme)</span>
             <span class="slider-val" id="val_thg_ev">200 € / Jahr</span>
           </div>
-          <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="200" oninput="calc()">
+          <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="300" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Einmalige Kosten Wallbox (inkl. Montage)</span>
             <span class="slider-val" id="val_wallbox">1.000 €</span>
           </div>
-          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="1000" oninput="calc()">
+          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="750" oninput="calc()">
         </div>
       </div>
 
       <div class="card">
-        <h2>3. Verbrenner (Benzin / Diesel) <span class="badge-ice">Verbrennungsmotor</span></h2>
+        <h2>3. Verbrenner <span class="badge-ice">Verbrennungsmotor</span></h2>
         <div class="slider-group">
           <div class="slider-header">
             <span>Spritverbrauch</span>
@@ -176,11 +176,11 @@
             <span>Spritpreis</span>
             <span class="slider-val" id="val_price_ice">1,75 € / Liter</span>
           </div>
-          <input type="range" id="price_ice" class="ice-slider" min="1.40" max="2.30" step="0.01" value="1.75" oninput="calc()">
+          <input type="range" id="price_ice" class="ice-slider" min="1.40" max="2.30" step="0.01" value="2.10" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
-            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
+            <span>Wartung & Instandhaltung </span>
             <span class="slider-val" id="val_maint_ice">380 € / Jahr</span>
           </div>
           <input type="range" id="maint_ice" class="ice-slider" min="200" max="750" step="10" value="380" oninput="calc()">
@@ -208,14 +208,14 @@
             <span>Kaufpreis Elektrofahrzeug</span>
             <span class="slider-val" id="val_buy_ev">13.200 €</span>
           </div>
-          <input type="range" id="buy_ev" class="ev-slider" min="8000" max="40000" step="200" value="13200" oninput="calc()">
+          <input type="range" id="buy_ev" class="ev-slider" min="8000" max="40000" step="200" value="15000" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Kaufpreis Verbrenner</span>
             <span class="slider-val" id="val_buy_ice">10.900 €</span>
           </div>
-          <input type="range" id="buy_ice" class="ice-slider" min="7000" max="35000" step="200" value="10900" oninput="calc()">
+          <input type="range" id="buy_ice" class="ice-slider" min="7000" max="35000" step="200" value="12000" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
