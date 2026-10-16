@@ -98,14 +98,14 @@
             <span>Fahrstrecke Elektrofahrzeug</span>
             <span class="slider-val" id="val_km_ev">20.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="20000" oninput="onKmEvChange()">
+          <input type="range" id="km_ev" class="ev-slider" min="0" max="00" step="500" value="20000" oninput="onKmEvChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Fahrstrecke Verbrenner</span>
             <span class="slider-val" id="val_km_ice">20.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="20000" oninput="onKmIceChange()">
+          <input type="range" id="km_ice" class="ice-slider" min="0" max="00" step="500" value="20000" oninput="onKmIceChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -137,7 +137,7 @@
             <span>Wartung & Instandhaltung </span>
             <span class="slider-val" id="val_maint_ev">220 € / Jahr</span>
           </div>
-          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="300" oninput="calc()">
+          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="220" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -149,16 +149,16 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>THG-Bonus (Jährliche Einnahme)</span>
-            <span class="slider-val" id="val_thg_ev">200 € / Jahr</span>
+            <span class="slider-val" id="val_thg_ev">300 € / Jahr</span>
           </div>
           <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="200" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Einmalige Kosten Wallbox (inkl. Montage)</span>
-            <span class="slider-val" id="val_wallbox">1.000 €</span>
+            <span class="slider-val" id="val_wallbox">750 €</span>
           </div>
-          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="1000" oninput="calc()">
+          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="750" oninput="calc()">
         </div>
       </div>
 
