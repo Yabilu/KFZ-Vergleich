@@ -96,23 +96,23 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>Fahrstrecke Elektrofahrzeug</span>
-            <span class="slider-val" id="val_km_ev">20.000 km/Jahr</span>
+            <span class="slider-val" id="val_km_ev">10.000 km/Jahr</span>
           </div>
           <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmEvChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Fahrstrecke Verbrenner</span>
-            <span class="slider-val" id="val_km_ice">20.000 km/Jahr</span>
+            <span class="slider-val" id="val_km_ice">10.000 km/Jahr</span>
           </div>
           <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmIceChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Geplante Haltedauer</span>
-            <span class="slider-val" id="val_years">10 Jahre</span>
+            <span class="slider-val" id="val_years">5 Jahre</span>
           </div>
-          <input type="range" id="years" min="1" max="10" step="1" value="10" oninput="calc()">
+          <input type="range" id="years" min="1" max="10" step="1" value="5" oninput="calc()">
         </div>
       </div>
 
@@ -121,23 +121,23 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>Stromverbrauch (inkl. Ladeverluste)</span>
-            <span class="slider-val" id="val_cons_ev">16,5 kWh / 100 km</span>
+            <span class="slider-val" id="val_cons_ev">17,5 kWh / 100 km</span>
           </div>
-          <input type="range" id="cons_ev" class="ev-slider" min="12.0" max="24.0" step="0.5" value="16.5" oninput="calc()">
+          <input type="range" id="cons_ev" class="ev-slider" min="12.0" max="24.0" step="0.5" value="17.5" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Strompreis</span>
             <span class="slider-val" id="val_price_ev">0,32 € / kWh</span>
           </div>
-          <input type="range" id="price_ev" class="ev-slider" min="0.15" max="0.75" step="0.01" value="0.33" oninput="calc()">
+          <input type="range" id="price_ev" class="ev-slider" min="0.15" max="0.75" step="0.01" value="0.32" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
-            <span>Wartung & Instandhaltung </span>
+            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
             <span class="slider-val" id="val_maint_ev">220 € / Jahr</span>
           </div>
-          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="300" oninput="calc()">
+          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="220" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -180,7 +180,7 @@
         </div>
         <div class="slider-group">
           <div class="slider-header">
-            <span>Wartung & Instandhaltung </span>
+            <span>Wartung & Instandhaltung (bei 10.000 km)</span>
             <span class="slider-val" id="val_maint_ice">380 € / Jahr</span>
           </div>
           <input type="range" id="maint_ice" class="ice-slider" min="200" max="750" step="10" value="380" oninput="calc()">
@@ -400,22 +400,22 @@
 
   function resetDefaults() {
     document.getElementById('syncKm').checked = true;
-    document.getElementById('km_ev').value = 20000;
-    document.getElementById('km_ice').value = 20000;
-    document.getElementById('years').value = 10;
-    document.getElementById('cons_ev').value = 16.5;
-    document.getElementById('price_ev').value = 0.33;
+    document.getElementById('km_ev').value = 10000;
+    document.getElementById('km_ice').value = 10000;
+    document.getElementById('years').value = 5;
+    document.getElementById('cons_ev').value = 17.5;
+    document.getElementById('price_ev').value = 0.32;
     document.getElementById('maint_ev').value = 220;
     document.getElementById('ins_ev').value = 520;
-    document.getElementById('thg_ev').value = 300;
-    document.getElementById('wallbox').value = 750;
+    document.getElementById('thg_ev').value = 200;
+    document.getElementById('wallbox').value = 1000;
     document.getElementById('cons_ice').value = 5.6;
-    document.getElementById('price_ice').value = 2.10;
+    document.getElementById('price_ice').value = 1.75;
     document.getElementById('maint_ice').value = 380;
     document.getElementById('ins_ice').value = 490;
     document.getElementById('tax_ice').value = 62;
-    document.getElementById('buy_ev').value = 15000;
-    document.getElementById('buy_ice').value = 12000;
+    document.getElementById('buy_ev').value = 13200;
+    document.getElementById('buy_ice').value = 10900;
     document.getElementById('res_pct').value = 45;
     calc();
   }
