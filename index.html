@@ -98,14 +98,14 @@
             <span>Fahrstrecke Elektrofahrzeug</span>
             <span class="slider-val" id="val_km_ev">20.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ev" class="ev-slider" min="0" max="00" step="500" value="00" oninput="onKmEvChange()">
+          <input type="range" id="km_ev" class="ev-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmEvChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Fahrstrecke Verbrenner</span>
             <span class="slider-val" id="val_km_ice">20.000 km/Jahr</span>
           </div>
-          <input type="range" id="km_ice" class="ice-slider" min="0" max="00" step="500" value="00" oninput="onKmIceChange()">
+          <input type="range" id="km_ice" class="ice-slider" min="3000" max="30000" step="500" value="10000" oninput="onKmIceChange()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -137,7 +137,7 @@
             <span>Wartung & Instandhaltung </span>
             <span class="slider-val" id="val_maint_ev">220 € / Jahr</span>
           </div>
-          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="220" oninput="calc()">
+          <input type="range" id="maint_ev" class="ev-slider" min="100" max="500" step="10" value="300" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -149,16 +149,16 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>THG-Bonus (Jährliche Einnahme)</span>
-            <span class="slider-val" id="val_thg_ev">300 € / Jahr</span>
+            <span class="slider-val" id="val_thg_ev">200 € / Jahr</span>
           </div>
-          <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="" oninput="calc()">
+          <input type="range" id="thg_ev" class="ev-slider" min="0" max="400" step="10" value="200" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Einmalige Kosten Wallbox (inkl. Montage)</span>
-            <span class="slider-val" id="val_wallbox">750 €</span>
+            <span class="slider-val" id="val_wallbox">1.000 €</span>
           </div>
-          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="750" oninput="calc()">
+          <input type="range" id="wallbox" class="ev-slider" min="0" max="2500" step="50" value="1000" oninput="calc()">
         </div>
       </div>
 
@@ -174,9 +174,9 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>Spritpreis</span>
-            <span class="slider-val" id="val_price_ice">2,10 € / Liter</span>
+            <span class="slider-val" id="val_price_ice">1,75 € / Liter</span>
           </div>
-          <input type="range" id="price_ice" class="ice-slider" min="1.40" max="2.30" step="0.01" value="2.1" oninput="calc()">
+          <input type="range" id="price_ice" class="ice-slider" min="1.40" max="2.30" step="0.01" value="1.75" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
@@ -206,14 +206,14 @@
         <div class="slider-group">
           <div class="slider-header">
             <span>Kaufpreis Elektrofahrzeug</span>
-            <span class="slider-val" id="val_buy_ev">15.000 €</span>
+            <span class="slider-val" id="val_buy_ev">13.200 €</span>
           </div>
           <input type="range" id="buy_ev" class="ev-slider" min="8000" max="40000" step="200" value="13200" oninput="calc()">
         </div>
         <div class="slider-group">
           <div class="slider-header">
             <span>Kaufpreis Verbrenner</span>
-            <span class="slider-val" id="val_buy_ice">12000 €</span>
+            <span class="slider-val" id="val_buy_ice">10.900 €</span>
           </div>
           <input type="range" id="buy_ice" class="ice-slider" min="7000" max="35000" step="200" value="10900" oninput="calc()">
         </div>
@@ -324,9 +324,9 @@
             </tr>
             <tr>
               <td>5. THG-Bonus (Einnahme EV)</td>
-              <td id="tb_thg_ev">-300 €</td>
+              <td id="tb_thg_ev">-200 €</td>
               <td>0 €</td>
-              <td id="tb_thg_diff" class="pos-val">-300 €</td>
+              <td id="tb_thg_diff" class="pos-val">-200 €</td>
             </tr>
             <tr class="subtotal-row">
               <td>SUMME Betrieb / Jahr</td>
